@@ -7,17 +7,17 @@ class Kata
 {
     public function run(array $set = [])
     {
-        $isMultipleOfThree = function ($number) {
-            return (is_int($number) && $number % 3 === 0);
-        };
-        $isMultipleOFive = function($number) {
-            return (is_int($number) && $number % 5 === 0);
-        };
-
-        $set = $this->apply($set, $isMultipleOfThree, 'Fizz');
-        $set = $this->apply($set, $isMultipleOFive, 'Buzz');
+        $set = $this->apply($set, $this->isMultipleOf(3), 'Fizz');
+        $set = $this->apply($set, $this->isMultipleOf(5), 'Buzz');
 
         return $set;
+    }
+
+    private function isMultipleOf($multiplier)
+    {
+        return function ($number) use ($multiplier) {
+            return (is_int($number) && $number % $multiplier === 0);
+        };
     }
 
     public function apply($set, callable $rule, $fizzyBuzzy) {
