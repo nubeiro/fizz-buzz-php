@@ -7,10 +7,18 @@ class Kata
 {
     public function run(array $set = [])
     {
+        $set = $this->apply($set, $this->isMultipleOfBoth(3, 5), 'FizzBuzz');
         $set = $this->apply($set, $this->isMultipleOf(3), 'Fizz');
         $set = $this->apply($set, $this->isMultipleOf(5), 'Buzz');
 
         return $set;
+    }
+
+    private function isMultipleOfBoth($aMultiplier, $anotherMultiplier) {
+        return function ($number) use ($aMultiplier, $anotherMultiplier) {
+            return (is_int($number) && $number % $aMultiplier === 0)
+                && (is_int($number) && $number % $anotherMultiplier === 0);
+        };
     }
 
     private function isMultipleOf($multiplier)
