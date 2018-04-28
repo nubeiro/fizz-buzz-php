@@ -7,17 +7,27 @@ class Kata
 {
     public function run(array $set = [])
     {
-        $set = $this->apply($set, $this->isMultipleOfBoth(3, 5), 'FizzBuzz');
-        $set = $this->apply($set, $this->isMultipleOf(3), 'Fizz');
-        $set = $this->apply($set, $this->isMultipleOf(5), 'Buzz');
+        $specs = [
+            15 => 'FizzBuzz',
+            3 => 'Fizz',
+            5 => 'Buzz',
+        ];
 
+        foreach ($specs as $number => $string) {
+            $set = array_map(
+                $this->apply($this->isMultipleOf($number), $string),
+                $set);
+        }
         return $set;
     }
 
-    private function isMultipleOfBoth($aMultiplier, $anotherMultiplier) {
-        return function ($number) use ($aMultiplier, $anotherMultiplier) {
-            return (is_int($number) && $number % $aMultiplier === 0)
-                && (is_int($number) && $number % $anotherMultiplier === 0);
+    private function apply($rule, $fizzyBuzzy)
+    {
+        return function ($number) use ($rule, $fizzyBuzzy) {
+            if ($rule($number)) {
+                return $fizzyBuzzy;
+            }
+            return $number;
         };
     }
 
@@ -28,12 +38,4 @@ class Kata
         };
     }
 
-    public function apply($set, callable $rule, $fizzyBuzzy) {
-        return array_map(function ($number) use ($rule, $fizzyBuzzy) {
-            if ($rule($number)) {
-                return $fizzyBuzzy;
-            }
-            return $number;
-        }, $set);
-    }
 }
